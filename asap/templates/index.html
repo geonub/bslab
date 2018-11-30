@@ -1,0 +1,432 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Welcome to HYU ASAP Website </title>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Roboto:100,300,400,500,700|Philosopher:400,400i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
+
+  <!-- Bootstrap css -->
+  <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <!-- Libraries CSS Files -->
+  <link href='{% static "lib/owlcarousel/assets/owl.carousel.min.css" %}' rel="stylesheet">
+  <link href='{% static "lib/owlcarousel/assets/owl.theme.default.min.css" %}' rel="stylesheet">
+  <link href='{% static "lib/font-awesome/css/font-awesome.min.css" %}' rel="stylesheet">
+  <link href='{% static "lib/animate/animate.min.css" %}' rel="stylesheet">
+  <link href='{% static "lib/modal-video/css/modal-video.min.css" %}' rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href='{% static "css/style.css" %}' rel="stylesheet">
+
+  <!-- =======================================================
+    Theme Name: eStartup
+    Theme URL: https://bootstrapmade.com/estartup-bootstrap-landing-page-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+
+<body>
+
+  <header id="header" class="header header-hide">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+        <h1><a href="/" class="scrollto">ASAP</a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+        <li><a class="navbar-brand" href="/">Home</a></li>
+        <li><a class="navbar-brand" href="/intro">소개</a></li>
+          <li class="menu-has-children"><a>실험</a>
+            <ul>
+         
+             <li><a class="nav-link" href="/research/all"> 실험목록</a></li>
+
+             {% if user.is_student %}
+             <li class="nav-item active">
+               <a class="nav-link" href="/research/enroll"> 실험신청</a>
+             </li>
+             <li class="nav-item active">
+               <a class="nav-link" href="/student/myresearch"> 참여 중인 실험</a>
+             </li>
+             {% elif user.is_prof %}
+             <li class="nav-item active">
+               <a class="nav-link" href="/research/create"> 실험등록</a>
+             </li>
+             <li class="nav-item active">
+               <a class="nav-link" href="/prof/myresearch"> 내 실험 관리</a>
+             </li>
+            {% endif %}
+            </ul>
+          </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/mypage"> 내 정보</a>
+        </li>
+        <li class="nav-item active">
+         {% if user.is_active %}
+          <a class="nav-link" href="{% url 'logout' %}">SIGN OUT</a>
+         {% else %}
+         <a class="nav-link" href="{% url 'login' %}">SIGN IN</a>
+         {% endif %}
+       </li>
+
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+
+  <!--==========================
+    Welcome Section
+  ============================-->
+  <section id="hero" class="wow fadeIn">
+    <div class="hero-container">
+      <h1>Welcome to HYU ASAP Website</h1>
+      <h2> 한양대학교 실험관리시스템 ASAP에 오신것을 환영합니다</h2>
+      <img src= '{% static "img/hero-img.png" %}' alt="Hero Imgs">
+      {% if user.is_active %}
+      {% else %}
+      <a href="{% url 'login' %}" class="btn-get-started scrollto">SIGN IN</a>
+      {% endif %}
+    </div>
+  </section><!-- #hero -->
+
+  <!--==========================
+    About ASAP Section
+  ============================-->
+  <section id="get-started" class="padd-section text-center wow fadeInUp">
+
+    <div class="container">
+      <div class="section-title text-center">
+
+        <h2>What is HYU ASAP?</h2>
+        <p class="separator"> Made by Hanyang University Business Behavioral Science Laboratory </p>
+
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-block">
+
+            <img src='{% static "img/svg/cloud.svg" %}' alt="img" class="img-fluid">
+            <p><h3>ASAP란?</h3></p>
+            <p>ASAP는 Administrative System of research Assembling & Participation의 약자로서, 한양대학교 경영학부 조직행동랩에서 주관하는 실험관리시스템입니다.</p>
+            
+
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-block">
+
+            <img src='{% static "img/svg/planet.svg" %}' alt="img" class="img-fluid">
+            <p><h3>실험관리</h3></p>
+            <p> 한양대학교 경영학부에서 주관하는 실험 목록을 보고, 신청하고, 등록할 수 있으며 현재 참여중인 실험도 볼 수 있는 시스템이다. </p>
+            
+
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-block">
+
+            <img src='{% static "img/svg/asteroid.svg" %}' alt="img" class="img-fluid">
+            <p><h3>CONTACT</h3></p>
+            <p> 오세형 교수: ohsh1@hanyang.ac.kr</p>
+            <p> 장지훈 교수: jihoonjhang@hanyang.ac.kr </p>
+            
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!--==========================
+    Ongoing Research Section
+  ============================-->
+  <section id="pricing" class="padd-section text-center wow fadeInUp">
+
+  {% if user.is_student %}
+    <div class="container">
+      <div class="section-title text-center">
+
+        <h2>현재 진행중인 실험</h2>
+        <p class="separator">현재 진행중인 강의를 보여드립니다</p>
+
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-3">
+          <div class="block-pricing">
+            <div class="table">
+              <h4>1</h4>
+              <h3>배치에 따른 소비행태 실험</h3>
+              <ul class="list-unstyled">
+                <li><b>이론</b> 수업</li>
+                <li><b>Spring</b> Semester</li>
+                <li><b>최대인원</b> 30</li>
+                <li>경영대 김교수</li>
+                <li>본 실험은 상품배치에 따라 소비행태가 어떻게 바뀌는지에 대한 실험입니다</li>
+              </ul>
+              <div class="table_btn">
+                <a href="/research/enroll" class="btn"><i class="fa fa-shopping-cart"></i> 실험목록 바로가기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="block-pricing">
+            <div class="table">
+              <h4>2</h4>
+              <h3>커피섭취량에 따른 집중력 변화 실험</h3>
+              <ul class="list-unstyled">
+                <li><b>이론</b> 수업</li>
+                <li><b>Spring</b> Semester</li>
+                <li><b>최대인원</b> 30</li>
+                <li>경영대 김교수</li>
+                <li>본 실험은 커피 섭취량에 따른 집중력 변화에 대한 실험입니다</li>
+              </ul>
+              <div class="table_btn">
+                <a href="/research/enroll" class="btn"><i class="fa fa-shopping-cart"></i> 실험목록 바로가기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="block-pricing">
+            <div class="table">
+             <h4>3</h4>
+              <h3>광고모델에 따른 판매실적</h3>
+              <ul class="list-unstyled">
+                <li><b>이론</b> 수업</li>
+                <li><b>Spring</b> Semester</li>
+                <li><b>최대인원</b> 30</li>
+                <li>경영대 김교수</li>
+                <li>본 실험은 광고모델에 따른 판매실적의 차이를 조사하는 실험입니다</li>
+              </ul>
+              <div class="table_btn">
+                <a href="/research/enroll" class="btn"><i class="fa fa-shopping-cart"></i> 실험목록 바로가기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="block-pricing">
+            <div class="table">
+              <h4>4</h4>
+              <h3>상품색에 따른 소비행태</h3>
+              <ul class="list-unstyled">
+                <li><b>이론</b> 수업</li>
+                <li><b>Spring</b> Semester</li>
+                <li><b>최대인원</b> 30</li>
+                <li>경영대 김교수</li>
+                <li>본 실험은 상품의 색이 소비욕구에 미치는 영향을 조사하는 실험입니다 </li>
+              </ul>
+              <div class="table_btn">
+                <a href="/research/enroll" class="btn"><i class="fa fa-shopping-cart"></i> 실험목록 바로가기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+  {% endif %}
+
+  </section>
+
+  <!--==========================
+    Video Section
+  ============================-->
+
+  <section id="video" class="text-center wow fadeInUp">
+    <div class="overlay">
+      <div class="container-fluid container-full">
+
+        <div class="row">
+          <a href="#" class="js-modal-btn play-btn" data-video-id="uAr60RPKHsQ"></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Contact Section
+  ============================-->
+  <section id="contact" class="padd-section wow fadeInUp">
+
+    <div class="container">
+      <div class="section-title text-center">
+        <h2>Contact</h2>
+        <p class="separator">도움이 필요하시면 연락주세요</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row justify-content-center">
+
+        <div class="col-lg-3 col-md-4">
+
+          <div class="info">
+            <div>
+              <i class="fa fa-map-marker"></i>
+              <p>(04763) 서울시 성동구 왕십리로 222<br> 한양대학교 경영대학</p>
+            </div>
+
+            <div class="email">
+              <i class="fa fa-envelope"></i>
+              <p>info@hanyang.ac.kr</p>
+            </div>
+
+            <div>
+              <i class="fa fa-phone"></i>
+              <p>010 1234 5678</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-5 col-md-8">
+          <div class="form">
+            <div id="sendmessage">Your message has been sent. Thank you!</div>
+            <div id="errormessage"></div>
+            <form action="" method="post" role="form" class="contactForm">
+              <div class="form-group">
+                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                <div class="validation"></div>
+              </div>
+              <div class="form-group">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                <div class="validation"></div>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+                <div class="validation"></div>
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+                <div class="validation"></div>
+              </div>
+              <div class="text-center"><button type="submit">Send Message</button></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- #contact -->
+
+  <!--==========================
+    Footer
+  ============================-->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-md-12 col-lg-4">
+          <div class="footer-logo">
+
+            <a class="navbar-brand" href="#">ASAP</a>
+            <p>한양대학교 실험 신청 관리 시스템</p>
+
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-2">
+          <div class="list-menu">
+
+
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-2">
+          <div class="list-menu">
+
+           
+
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-2">
+          <div class="list-menu">
+
+            
+
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-2">
+          <div class="list-menu">
+
+            
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="copyrights">
+      <div class="container">
+        <p>&copy; Copyrights eStartup. All rights reserved.</p>
+        <div class="credits">
+          <!--
+            All the links in the footer should remain intact.
+            You can delete the links only if you purchased the pro version.
+            Licensing information: https://bootstrapmade.com/license/
+            Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=eStartup
+          -->
+          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+
+
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+  <!-- JavaScript Libraries -->
+  <script src= '{% static "lib/jquery/jquery.min.js" %}'></script>
+  <script src='{% static "lib/jquery/jquery-migrate.min.js" %}'></script>
+  <script src='{% static "lib/bootstrap/js/bootstrap.bundle.min.js" %}'></script>
+  <script src='{% static "lib/superfish/hoverIntent.js" %}'></script>
+  <script src='{% static "lib/superfish/superfish.min.js" %}'></script>
+  <script src='{% static "lib/easing/easing.min.js" %}'></script>
+  <script src='{% static "lib/modal-video/js/modal-video.js" %}'></script>
+  <script src='{% static "lib/owlcarousel/owl.carousel.min.js" %}'></script>
+  <script src='{% static "lib/wow/wow.min.js" %}'></script>
+  <!-- Contact Form JavaScript File -->
+  <script src='{% static "contactform/contactform.js" %}'></script>
+
+  <!-- Template Main Javascript File -->
+  <script src='{% static "js/main.js" %}'></script>
+
+</body>
+</html>

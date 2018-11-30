@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+  <p></p>
+    <br/>
+    <br/>
+    <h3>실험 목록</h3>
+    <form method="get">
+    <div class="form-row align-items-center">
+        <div class="col-auto my-1">
+            <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="q_option">
+            <option value="title">실험명</option>
+            <option value="research_number">실험번호</option>
+            <option value="prof">교강사</option>
+            </select>
+        </div>
+        <div class="col-auto">
+        <label class="sr-only" for="inlineFormInput">Name</label>
+        <input type="text" class="form-control mb-2" id="inlineFormInput" name="q" value="{{q}}" placeholder="내용">
+        </div>
+        <div class="col-auto">
+        <button type="submit" class="btn btn-success mb-2">Search</button>
+        </div>
+    </div>
+    </form>      
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">실험번호</th>
+          <th scope="col">실험명</th>
+          <th scope="col">유형</th>
+          <th scope="col">구분</th>
+          <th scope="col">교강사</th>
+          <th scope="col">최대인원</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for all_research in all_researches %}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{ all_research.research_number }}</td>
+          <td>{{ all_research.title }}</td>
+          <td>{{ all_research.get_research_type_display }}</td>
+          <td>{{ all_research.get_semester_display }}</td>
+          <td>{{ all_research.prof }}</td>
+          <td>{{ all_research.max_number }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{% endblock %}

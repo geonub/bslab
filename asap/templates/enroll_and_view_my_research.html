@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+  <p></p>
+    <br/>
+    <br/>
+    <h3>신청 가능한 실험</h3>
+    <table class="table">
+      <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">실험번호</th>
+            <th scope="col">실험명</th>
+            <th scope="col">연도</th>
+            <th scope="col">교강사</th>
+            <th scope="col">마감여부</th>
+            <th scope="col">상세정보</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for all_research in all_researches %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ all_research.research_number }}</td>
+          <td>{{ all_research.title }}</td>
+          <td>{{ all_research.year }}</td>
+          <td>{{ all_research.prof }}</td>
+          <td>{{ all_research.current_number }} / {{ all_research.max_number }}</td>
+          {% if all_research.title in research_list %}
+          <td></td>
+          {% else %}
+          <td><a href='{% url "research_info" %}'><button type ="button" class="btn btn-success">상세정보</button></a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p></p>
+      <h3>내가 신청한 실험</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">실험번호</th>
+            <th scope="col">실험명</th>
+            <th scope="col">연도</th>
+            <th scope="col">교강사</th>
+            <th scope="col">마감여부</th>
+            <th scope="col">취소</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for my_record in my_records %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ my_record.title.research_number }}</td>
+            <td>{{ my_recorad.title.title }}</td>
+            <td>{{ my_record.title.year }}</td>
+            <td>{{ my_record.title.prof }}</td>
+            <td>{{ my_record.title.current_number }} / {{ my_record.title.max_number }}</td>
+            <td><a href="{% url 'cancel_research' my_record.pk %}" onclick ="return asap_confirm('정말 취소하실건가요?')"><button type="button" class="btn btn-secondary">취소</button></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+</div>
+{% endblock %}

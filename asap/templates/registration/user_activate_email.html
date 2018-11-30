@@ -1,0 +1,7 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}
+계정 인증을 위해 다음 링크를 클릭해주세요.
+{% endblocktrans %}
+
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+{% endautoescape %}

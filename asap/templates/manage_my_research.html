@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+  <p></p>
+    <br/>
+    <br/>
+    <h3>실험 관리</h3>
+
+    <form method="post" action="{% url 'manage_my_research' pk %}">
+    {% csrf_token %}
+    {{ form.management_form }}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">이름</th>
+          <th scope="col">학번</th>
+          <th scope="col">평점</th>
+          <th scope="col">급여</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for target,form in zip_form %}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{ target.student.user.name }}</td>
+          <td>{{ target.student.student_number }}</td>
+          {% for field in form %}
+            <div class="fieldWrapper">
+              <td>{{field}}</td>
+            </div>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-secondary" onclick="return asap_confirm('입력하시겠습니까?')">입력</button></td>
+ 
+    </form>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,22 @@
+<!-- Bootstrap core CSS -->
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="spacer_30">&nbsp;</div>
+        <div class="spacer_90 hidden-sm hidden-xs">&nbsp;</div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>{% trans "이메일 인증이 완료되었습니다.  이제 로그인 하실 수 있습니다." %}</p>
+
+                        <p><a class="btn btn-success" href="{% url 'login' %}">{% trans 'Login' %}</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

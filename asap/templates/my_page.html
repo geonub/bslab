@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post" action="{% url 'my_page' %}">
+{% csrf_token %}
+<br/>
+<br/>
+<h3>My Page</h3>
+<p></p>
+<p>이름: {{ user_profile.name }}</p>
+<p>이메일: {{ user_profile.email }}</p>
+<a href="/mypage/changepassword"> 비밀번호 변경</a>
+<p>성별: {{ user_profile.sex }}</p>
+{% if user.is_student %}
+<p>구분: 학생</p>
+{{ form.as_p }}
+<button type="submit">정보변경</button>
+
+{% elif user.is_prof %}
+<p>구분: 교수</p>
+{{ form.as_p }}
+<button type="submit">정보변경</button>
+
+{% else %}
+<p>구분: 관리자</p>
+{% endif %}
+</form>
+
+{% endblock %}
