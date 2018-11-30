@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView, CreateView
+from django.views.generic import TemplateView, ListView, CreateView, DetailView
 from django.urls import reverse_lazy
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_text
@@ -7,19 +7,14 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
-from .models import User, Student, Prof, Research, Record
+from .models import User, Student, Prof, Research, Unit, Record
 from django.db.models import Count
-from .forms import StudentSignUpForm, ProfSignUpForm, CreateResearchForm, RecordScoreFormSet
+from .forms import StudentSignUpForm, ProfSignUpForm, CreateResearchForm, CreateUnitForm, RecordScoreFormSet
 from .forms import ModifyProfForm, ModifyStudentForm
-from django.core.management.base import BaseCommand
-from django.core.cache import cache
 
 import logging
 
-class Command(BaseCommand):
-    def handle(self, *args, **kwargs):
-        cache.clear()
-        self.stdout.write('Cleared cache\n')
+# <------------------------------------가입/인증 View------------------------------------>
 
 class UserActivateView(TemplateView):
     logger = logging.getLogger(__name__)
@@ -46,18 +41,6 @@ class UserActivateView(TemplateView):
 
         return super(UserActivateView, self).get(request, *args, **kwargs)
 
-class IndexView(TemplateView):
-    template_name = 'index.html'
-
-class IntroView(TemplateView):
-    template_name = 'intro.html'
-
-class WarningView(TemplateView):
-    template_name = 'warning.html'
-
-class SignupSelectView(TemplateView):
-    template_name = 'registration/signup_select.html'
-
 class CreateStudentView(CreateView):
     model = User
     form_class = StudentSignUpForm
@@ -70,25 +53,29 @@ class CreateProfView(CreateView):
     template_name = 'registration/signup_prof.html'
     success_url = reverse_lazy('create_user_done')
 
-class RegisteredView(TemplateView):
-    template_name = 'registration/signup_done.html'
+# <------------------------------------강사 View------------------------------------>
 
-def create_and_view_my_research(request):
-    my_researches = Research.objects.filter(prof = Prof.objects.get(user = request.user))
+
+def create_view_research(request):
+    research_list = Research.objects.filter(prof_obj=Prof.objects.get(user=request.user))
+
     if request.method == "POST":
         form = CreateResearchForm(request.POST)
         if form.is_valid():
             research_form = form.save(commit = False)
-            research_form.prof = Prof.objects.get(user = request.user)
+            research_form.prof_obj = Prof.objects.get(user=request.user)
             research_form.save()
             messages.success(request, '성공적으로 등록되었습니다!')
-            return render(request, 'create_and_view_my_research.html',{'create_research': form, 'my_researches': my_researches})
+            return render(request, 'create_view_research.html', {'research_form': form, 'research_list': research_list})
     else:
         form = CreateResearchForm()
-        return render(request, 'create_and_view_my_research.html',{'create_research': form, 'my_researches': my_researches})
+        return render(request, 'create_view_research.html', {'research_form': form, 'research_list': research_list})
 
-def modify_my_research(request, pk):
+def modify_research(request, pk):
     target = Research.objects.get(pk=pk)
+
+    if target.prof_obj != Prof.objects.get(user=request.user):
+        return redirect('warning')
 
     if request.method == "POST":
         form = CreateResearchForm(request.POST, instance=target)
@@ -97,34 +84,85 @@ def modify_my_research(request, pk):
              messages.success(request, '성공적으로 수정되었습니다!')
              return redirect('create_research')
     else:
-        if target.prof == Prof.objects.get(user = request.user):
-            my_researches = Research.objects.filter(prof = Prof.objects.get(user=request.user))
-            form = CreateResearchForm(instance = target)
-            return render(request, 'modify_my_research.html',{'modify_research': form, 'my_researches': my_researches, 'target': target})
-        else:
-            return redirect('warning')        
+        research_list = Research.objects.filter(prof_obj=Prof.objects.get(user=request.user))
+        form = CreateResearchForm(instance = target)
+        return render(request, 'modify_research.html', {'research_form': form, 'research_list': research_list, 'target': target})
 
-def delete_my_research(request, pk):
+def delete_research(request, pk):
     target = Research.objects.get(pk=pk)
-    if target.prof == Prof.objects.get(user = request.user):
+
+    if target.prof_obj == Prof.objects.get(user=request.user):
         target.delete()
         messages.success(request, '성공적으로 삭제되었습니다!')
         return redirect('create_research')
     else:
         return redirect('warning')
     
-def my_research_prof(request):
-    my_researches = Research.objects.filter(prof = Prof.objects.get(user = request.user))
-    return render(request, 'my_research_prof.html',{'my_researches': my_researches, })
 
-def manage_my_research(request, pk):
-    target_research = Research.objects.get(pk=pk)
+def create_unit(request, pk):
+    research_obj = Research.objects.get(pk=pk)
 
-    # 타인 강의 접근 방어
-    if not target_research.prof == Prof.objects.get(user = request.user):
+    if research_obj.prof_obj != Prof.objects.get(user=request.user):
         return redirect('warning')
 
-    target_list = Record.objects.filter(title=target_research)
+    unit_list = Unit.objects.filter(research_obj=Research.objects.get(pk=pk))
+
+    if request.method == "POST":
+        form = CreateUnitForm(request.POST)
+        if form.is_valid():
+            unit_form = form.save(commit=False)
+            unit_form.research_obj = Research.objects.get(pk=pk)
+            unit_form.save()
+            messages.success(request, '성공적으로 등록되었습니다!')
+            return render(request, 'create_unit.html', {'research_obj': research_obj, 'unit_form': form, 'unit_list': unit_list, 'rpk': pk})
+    else:
+        form = CreateUnitForm()
+        return render(request, 'create_unit.html', {'research_obj': research_obj, 'unit_form': form, 'unit_list': unit_list, 'rpk': pk})
+
+
+def modify_unit(request, rpk, upk):
+    research_obj = Research.objects.get(pk=rpk)
+    target = Unit.objects.get(pk=upk)
+
+    if research_obj.prof_obj != Prof.objects.get(user=request.user):
+        return redirect('warning')
+
+    if request.method == "POST":
+        form = CreateUnitForm(request.POST, instance=target)
+        if form.is_valid():
+             form.save()
+             messages.success(request, '성공적으로 수정되었습니다!')
+             return redirect('create_unit', pk=rpk)
+    else:
+        unit_list = Unit.objects.filter(research_obj=Research.objects.get(pk=rpk))
+        form = CreateUnitForm(instance=target)
+        return render(request, 'modify_unit.html', {'research_obj': research_obj, 'unit_form': form, 'unit_list': unit_list, 'target': target})
+
+
+def delete_unit(request, rpk, upk):
+    target = Unit.objects.get(pk=upk)
+
+    if target.research_obj.prof_obj == Prof.objects.get(user=request.user):
+        target.delete()
+        messages.success(request, '성공적으로 삭제되었습니다!')
+        return redirect('create_unit', pk=rpk)
+    else:
+        return redirect('warning')
+
+
+def list_manage_unit(request):
+    objects = Research.objects.filter(prof_obj=Prof.objects.get(user=request.user))
+    unit_list = Unit.objects.filter(research_obj__in=objects)
+    return render(request, 'list_manage_unit.html', {'unit_list': unit_list, })
+
+def manage_unit(request, pk):
+    target_unit = Unit.objects.get(pk=pk)
+
+    # 타인 강의 접근 차단
+    if not target_unit.research_obj.prof_obj == Prof.objects.get(user=request.user):
+        return redirect('warning')
+
+    target_list = Record.objects.filter(unit_obj=target_unit)
     if request.method == "POST":
         formset = RecordScoreFormSet(request.POST, queryset=target_list,)
         if formset.is_valid():
@@ -132,59 +170,61 @@ def manage_my_research(request, pk):
                 if fs.is_valid():
                     fs.save()
             messages.success(request, '성공적으로 입력되었습니다!')
-            return redirect('manage_my_research',pk)
+            return redirect('manage_unit',pk)
         else:
             messages.error(request, 'Please correct the error below.')
     else:
         formset = RecordScoreFormSet(queryset=target_list,)
         zip_form = zip(target_list, formset)
-        return render(request, 'manage_my_research.html',{'pk': pk, 'form': formset, 'zip_form': zip_form,})
+        return render(request, 'manage_unit.html', {'pk': pk, 'form': formset, 'zip_form': zip_form, })
 
-#학생
-def enroll_and_view_my_research(request):
-    all_researches = Research.objects.all()
-    my_records = Record.objects.filter(student=Student.objects.get(user=request.user))    
-    my_researches = Research.objects.filter(record__in = my_records)
-    return render(request, 'enroll_and_view_my_research.html',{'all_researches': all_researches, 'my_records': my_records, 'research_list': my_researches.values_list('title', flat=True)})
+# <------------------------------------학생 View------------------------------------>
 
-def enroll_research(request, pk):
-    target_research = Research.objects.get(pk=pk)
+
+def enroll_view_unit(request):
+    all_units = Unit.objects.all()
+    my_records = Record.objects.filter(student_obj=Student.objects.get(user=request.user))
+    my_researchs = Research.objects.filter(unit__record__in = my_records)
+    return render(request, 'enroll_view_unit.html', {'all_units': all_units, 'my_records': my_records, 'my_researchs': my_researchs.values_list('research_name', flat=True)})
+
+def enroll_unit(request, pk):
+    target_unit = Unit.objects.get(pk=pk)
     me = Student.objects.get(user = request.user)
 
-    try:
-        Record.objects.get(student=me, title=target_research)
+    try: #신청 여부 검사
+        Record.objects.get(student_obj=me, unit_obj=target_unit)
         messages.error(request, '이미 신청완료한 실험입니다!')
         return redirect('enroll_page')
 
     except Record.DoesNotExist:
-        if target_research.current_number >= target_research.max_number:
+        if target_unit.current_number >= target_unit.max_number:  # 수강 정원 검사
             messages.error(request, '정원 초과입니다. 다른 실험을 선택하여 주시기 바랍니다.')
             return redirect('enroll_page')
 
-        record = Record.objects.create(student=me, title=target_research)
+        record = Record.objects.create(student_obj=me, unit_obj=target_unit)
         record.save()
         messages.success(request, '실험신청을 성공하였습니다!')
-        target_research.current_number += 1
-        target_research.save()
+        target_unit.current_number += 1
+        target_unit.save()
         return redirect('enroll_page')
 
-def cancel_research(request,pk):
-    target_research = Record.objects.get(pk=pk)
-    if target_research.student == Student.objects.get(user = request.user):
-        target_research.title.current_number -=1
-        target_research.title.save()
-        target_research.delete()
+def cancel_unit(request,pk):
+    target_record = Record.objects.get(pk=pk)
+    if target_record.student_obj == Student.objects.get(user=request.user):
+        target_record.unit_obj.current_number -= 1
+        target_record.unit_obj.save()
+        target_record.delete()
         messages.success(request, '신청 취소되었습니다.')
         return redirect('enroll_page')
     else:
         return redirect('warning')
 
 def my_research_student(request):
-    my_researches = Record.objects.filter(student=Student.objects.get(user=request.user))
+    my_researches = Record.objects.filter(student_obj=Student.objects.get(user=request.user))
     return render(request, 'my_research_student.html',{'my_researches': my_researches,})
 
-class ResearchInfoView(TemplateView):
-    template_name = 'research_info.html'
+# <------------------------------------실험 조회/정보 View------------------------------------>
+
 
 class AllResearchListView(ListView):
     template_name = 'all_research.html'
@@ -196,17 +236,22 @@ class AllResearchListView(ListView):
         q_option = self.request.GET.get('q_option')
         if q:
             if q_option == "prof":
-                return Research.objects.filter(prof__user__name__icontains=q)
+                return Research.objects.filter(prof_obj__user__name__icontains=q)
             else:
                 filter_dict = {q_option+'__icontains': q}
                 return Research.objects.filter(**filter_dict)
         else:
             return Research.objects.filter()
 
-class DoneView(TemplateView):
-    template_name = 'done.html'
 
-# 전체메뉴
+def research_info(request, pk):
+    research_obj = Research.objects.get(pk=pk)
+    unit_list = Unit.objects.filter(research_obj=research_obj)
+    return render(request, 'research_info.html', {'research_obj': research_obj, 'unit_list': unit_list,})
+
+# <------------------------------------개인 설정 메뉴 View------------------------------------>
+
+
 def my_page(request):
     if request.user.is_student:
         target = Student.objects.get(user=request.user)
@@ -245,6 +290,3 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'registration/change_password.html', {'form': form})
-
-
-# Create your views here.

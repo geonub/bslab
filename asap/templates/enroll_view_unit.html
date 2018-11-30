@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+  <p></p>
+    <br/>
+    <br/>
+    <h3>신청 가능한 실험</h3>
+    <table class="table">
+      <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">실험번호</th>
+            <th scope="col">실험명</th>
+            <th scope="col">학기</th>
+            <th scope="col">교강사</th>
+            <th scope="col">장소</th>
+            <th scope="col">시간</th>
+            <th scope="col">시수</th>
+            <th scope="col">마감여부</th>
+            <th scope="col">등록</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for unit in all_units %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ unit.research_obj.research_number }}</td>
+          <td><a onclick="window.open('{% url 'research_info' unit.research_obj.pk %}','info','width=800, height=800');">{{ unit.research_obj.research_name }}</a></td>
+          <td>{{ unit.research_obj.get_semester_display }}</td>
+          <td>{{ unit.research_obj.prof_obj }}</td>
+          <td>{{ unit.place }}</td>
+          <td>{{ unit.date }}</td>
+          <td>{{ unit.period }}</td>
+          <td>{{ unit.current_number }} / {{ unit.max_number }}</td>
+          {% if unit.research_obj.research_name in my_researchs %}
+          <td></td>
+          {% else %}
+          <td><a class="btn btn-success" href="{% url 'enroll_unit' unit.pk %}" onclick="return sugang_confirm('진짜 수강할고임??')">수강</a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p></p>
+      <h3>내가 신청한 실험</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">실험번호</th>
+            <th scope="col">실험명</th>
+            <th scope="col">학기</th>
+            <th scope="col">교강사</th>
+            <th scope="col">장소</th>
+            <th scope="col">시간</th>
+            <th scope="col">시수</th>
+            <th scope="col">마감여부</th>
+            <th scope="col">취소</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for my_record in my_records %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ my_record.unit_obj.research_obj.research_number }}</td>
+            <td><a onclick="window.open('{% url 'research_info' my_record.unit_obj.research_obj.pk %}','info','width=800, height=800');">{{ my_record.unit_obj.research_obj.research_name }}</a></td>
+            <td>{{ my_record.unit_obj.research_obj.get_semester_display }}</td>
+            <td>{{ my_record.unit_obj.research_obj.prof_obj }}</td>
+            <td>{{ my_record.unit_obj.place }}</td>
+            <td>{{ my_record.unit_obj.date }}</td>
+            <td>{{ my_record.unit_obj.period }}</td>
+            <td>{{ my_record.unit_obj.current_number }} / {{ my_record.unit_obj.max_number }}</td>
+            <td><a href="{% url 'cancel_unit' my_record.pk %}" onclick ="return asap_confirm('정말 취소하실건가요?')"><button type="button" class="btn btn-secondary">취소</button></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+</div>
+{% endblock %}

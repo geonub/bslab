@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+  <p></p>
+    <br/>
+    <br/>
+    <h3>출결 관리</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">실험번호</th>
+          <th scope="col">실험명</th>
+          <th scope="col">학기</th>
+          <th scope="col">장소</th>
+          <th scope="col">시간</th>
+          <th scope="col">참여 인원</th>
+          <th scope="col">최대 인원</th>
+          <th scope="col">관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for unit in unit_list %}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{ unit.research_obj.research_number }}</td>
+            <td><a onclick="window.open('{% url 'research_info' unit.research_obj.pk %}','info','width=800, height=800');">{{ unit.research_obj.research_name }}</a></td>
+          <td>{{ unit.research_obj.get_semester_display }}</td>
+          <td>{{ unit.place}}</td>
+          <td>{{ unit.date }}</td>
+          <td>{{ unit.current_number}}</td>
+          <td>{{ unit.max_number}}</td>
+          <td><a href="{% url 'manage_unit' unit.pk %}"><type="button" class="btn btn-secondary">관리</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}

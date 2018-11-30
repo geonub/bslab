@@ -12,7 +12,7 @@
         <div class="col-auto my-1">
             <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
             <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="q_option">
-            <option value="title">실험명</option>
+            <option value="research_name">실험명</option>
             <option value="research_number">실험번호</option>
             <option value="prof">교강사</option>
             </select>
@@ -32,22 +32,20 @@
           <th scope="col">#</th>
           <th scope="col">실험번호</th>
           <th scope="col">실험명</th>
-          <th scope="col">유형</th>
-          <th scope="col">구분</th>
+          <th scope="col">학기</th>
+          <th scope="col">연도</th>
           <th scope="col">교강사</th>
-          <th scope="col">최대인원</th>
         </tr>
       </thead>
       <tbody>
-        {% for all_research in all_researches %}
+        {% for research in all_researches %}
         <tr>
           <th scope="row">{{forloop.counter}}</th>
-          <td>{{ all_research.research_number }}</td>
-          <td>{{ all_research.title }}</td>
-          <td>{{ all_research.get_research_type_display }}</td>
-          <td>{{ all_research.get_semester_display }}</td>
-          <td>{{ all_research.prof }}</td>
-          <td>{{ all_research.max_number }}</td>
+          <td>{{ research.research_number }}</td>
+          <td><a onclick="window.open('{% url 'research_info' research.pk %}','info','width=800, height=800');">{{ research.research_name }}</a></td>
+          <td>{{ research.get_semester_display }}</td>
+          <td>{{ research.year }}</td>
+          <td>{{ research.prof_obj }}</td>
         </tr>
         {% endfor %}
       </tbody>

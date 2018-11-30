@@ -7,7 +7,7 @@
     <br/>
     <h3>실험 관리</h3>
 
-    <form method="post" action="{% url 'manage_my_research' pk %}">
+    <form method="post" action="{% url 'manage_unit' pk %}">
     {% csrf_token %}
     {{ form.management_form }}
     <table class="table">

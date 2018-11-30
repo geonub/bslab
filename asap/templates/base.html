@@ -5,6 +5,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Roboto:100,300,400,500,700|Philosopher:400,400i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -18,6 +22,12 @@
 
     <!-- Main Stylesheet File -->
     <link href='{% static "css/style.css" %}' rel="stylesheet">
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
     <title>ASAP</title>
   </head>
@@ -54,21 +64,21 @@
                   <a class="nav-link" href="/research/create"> 실험등록</a>
                 </li>
                 <li class="nav-item active">
-                  <a class="nav-link" href="/prof/myresearch"> 내 실험 관리</a>
+                  <a class="nav-link" href="/prof/manage"> 내 실험 관리</a>
                 </li>
                 {% endif %}
               </ul>
             </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/mypage">내 정보</a>
-          </li>
-          <li class="nav-item active">
+            <li class="nav-item active">
             {% if user.is_active %}
+              <a class="nav-link" href="/mypage">내 정보</a>
+              </li>
+              <li class="nav-item active">
               <a class="nav-link" href="{% url 'logout' %}">SIGN OUT</a>
             {% else %}
-            <a class="nav-link" href="{% url 'login' %}">SIGN IN</a>
+              <a class="nav-link" href="{% url 'login' %}">SIGN IN</a>
             {% endif %}
-          </li>
+            </li>
 
           </ul>
         </nav><!-- #nav-menu-container -->
@@ -80,12 +90,6 @@
 {% endblock %}
 
   
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
     <script>
       function asap_confirm(text){
         if (confirm(text) == true) {

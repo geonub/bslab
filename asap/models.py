@@ -76,59 +76,33 @@ class Prof(models.Model):
 
 class Research(models.Model):
     research_number = models.CharField(max_length=6)
-    prof = models.ForeignKey('Prof', on_delete=models.CASCADE)
-    title = models.CharField(max_length=30)
+    prof_obj = models.ForeignKey('Prof', on_delete=models.CASCADE)
+    research_name = models.CharField(max_length=30)
     SEME = (
         ('1', 'Spring'),
-        ('2', 'Fall')
-        )                                                                                                                                                                                                                                                                                                                                                                                            
+        ('2', 'Fall'),
+        )
     semester = models.CharField(max_length=1, choices=SEME)
     year = models.PositiveIntegerField(default=2018)
-    month = models.PositiveSmallIntegerField(choices = MONTHS.items(), null=True)
-    # 캘린더 기능 추가
-    place = models.CharField(max_length=30, null=True)
     description = models.TextField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
-    max_number = models.PositiveIntegerField(default=0)
-    current_number = models.PositiveIntegerField(default=0)
-    TIME_CHOICES = ( ('09:00:00', '09 AM'),
-                    ('10:00:00', '10 AM'),
-                    ('11:00:00', '11 AM'),
-                    ('12:00:00', '12 PM'),
-                    ('13:00:00', '01 PM'),
-                    ('14:00:00', '02 PM'),
-                    ('15:00:00', '03 PM'),
-                    ('16:00:00', '04 PM'),
-                    ('17:00:00', '05 PM'),
-                    ('18:00:00', '06 PM'),
-                    ('19:00:00', '07 PM'),
-                    ('20:00:00', '08 PM'),
-                    ('21:00:00', '09 PM'),
-                    ('22:00:00', '10 PM'),
-                    ('23:00:00', '11 PM'),
-                    )
-    start_time = models.CharField(max_length=8, choices = TIME_CHOICES, null=True)
-    HOUR = ( ('00:00:00', '0시간'),
-            ('01:00:00', '1시간'),
-            ('02:00:00', '2시간'),
-            ('03:00:00', '3시간'),
-            ('04:00:00', '4시간'),
-            ('05:00:00', '5시간'),
-            )
-    MINUTE = ( ('00:00:00', '0분'),
-            ('00:15:00', '15분'),
-            ('00:30:00', '30분'),
-            ('00:45:00', '45분'),
-            )
-    hour = models.CharField(max_length=8, choices = HOUR, null=True)
-    minute = models.CharField(max_length=8, choices = MINUTE, null=True)
-
     def __str__(self):
-        return self.title
+        return self.research_name
+
+
+class Unit(models.Model):
+    research_obj = models.ForeignKey('Research', on_delete=models.CASCADE)
+    place = models.CharField(max_length=30)
+    date = models.DateTimeField()
+    period = models.PositiveIntegerField(default=1)
+    max_number = models.PositiveIntegerField(default=20)
+    current_number = models.PositiveIntegerField(default=0)
+    remark = models.CharField(max_length=30, null=True)
+
 
 class Record(models.Model):
-    student = models.ForeignKey('Student', on_delete=models.CASCADE)
-    title = models.ForeignKey('Research', on_delete=models.CASCADE)
+    student_obj = models.ForeignKey('Student', on_delete=models.CASCADE)
+    unit_obj = models.ForeignKey('Unit', on_delete=models.CASCADE)
     total = models.PositiveIntegerField(null=True, blank=True)
     SCORE = (
         ('P', 'P'),
@@ -137,5 +111,5 @@ class Record(models.Model):
     score = models.CharField(max_length=2, choices=SCORE, null=True, blank=True)
 
     def __str__(self):
-        return self.title.title + ' / ' + self.student.user.name
+        return self.unit_obj.research_obj.research_name + ' / ' + self.student_obj.user.name
 

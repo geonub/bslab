@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
 
-from .models import User, Student, Prof, Research, Record
+from .models import User, Student, Prof, Research, Unit, Record
 
 class StudentInline(admin.StackedInline):
     model = Student
@@ -40,11 +40,27 @@ class ProfAdmin(admin.ModelAdmin):
 
 class ResearchAdmin(admin.ModelAdmin):
     fieldsets = (
-        ('Research info', {'fields': ('research_number', 'title', 'prof', 'year', 'semester', 'description', 'current_number', 'max_number', 'start_time', 'hour', 'minute',)}),
+        ('Research info', {'fields': ('research_number', 'research_name',
+                                      'prof_obj', 'year', 'semester', 'description', 'created_date',)}),
     )
-    list_display = ('research_number', 'title', 'prof', 'year', 'semester', 'current_number', 'max_number', 'created_date', 'start_time', 'hour', 'minute',)
-    search_fields = ('research_number', 'title', 'prof', 'year', 'semester', 'current_number', 'max_number', 'created_date', 'start_time', 'hour', 'minute',)
-    ordering = ('research_number', 'title', 'prof', 'year', 'semester', 'current_number', 'max_number', 'created_date', 'start_time', 'hour', 'minute',)
+    list_display = ('research_number', 'research_name', 'prof_obj',
+                    'year', 'semester', 'description', 'created_date',)
+    search_fields = ('research_number', 'research_name', 'prof_obj',
+                     'year', 'semester', 'description', 'created_date',)
+    ordering = ('research_number', 'research_name', 'prof_obj',
+                'year', 'semester', 'description', 'created_date',)
+
+
+class UnitAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Unit info', {'fields': ('research_obj', 'date', 'place', 'max_number', 'current_number', 'remark',)}),
+    )
+    list_display = ('research_obj', 'date', 'place',
+                    'max_number', 'current_number', 'remark',)
+    search_fields = ('research_obj', 'date', 'place',
+                     'max_number', 'current_number', 'remark',)
+    ordering = ('research_obj', 'date', 'place',
+                'max_number', 'current_number', 'remark',)
 
 class RecordAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -52,10 +68,11 @@ class RecordAdmin(admin.ModelAdmin):
     )
     list_display = ('score', )
     search_fields = ('score', )
-    ordering = ('title', 'student',)
+    ordering = ('unit_obj', 'student_obj',)
 
 # Register your models here.
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Prof, ProfAdmin)
 admin.site.register(Research, ResearchAdmin)
+admin.site.register(Unit, UnitAdmin)
 admin.site.register(Record, RecordAdmin)

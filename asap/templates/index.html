@@ -1,94 +1,7 @@
+{% extends 'base.html' %}
 {% load staticfiles %}
 
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="utf-8">
-  <title>Welcome to HYU ASAP Website </title>
-  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <meta content="" name="keywords">
-  <meta content="" name="description">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Roboto:100,300,400,500,700|Philosopher:400,400i,700,700i" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
-
-  <!-- Bootstrap css -->
-  <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-  <!-- Libraries CSS Files -->
-  <link href='{% static "lib/owlcarousel/assets/owl.carousel.min.css" %}' rel="stylesheet">
-  <link href='{% static "lib/owlcarousel/assets/owl.theme.default.min.css" %}' rel="stylesheet">
-  <link href='{% static "lib/font-awesome/css/font-awesome.min.css" %}' rel="stylesheet">
-  <link href='{% static "lib/animate/animate.min.css" %}' rel="stylesheet">
-  <link href='{% static "lib/modal-video/css/modal-video.min.css" %}' rel="stylesheet">
-
-  <!-- Main Stylesheet File -->
-  <link href='{% static "css/style.css" %}' rel="stylesheet">
-
-  <!-- =======================================================
-    Theme Name: eStartup
-    Theme URL: https://bootstrapmade.com/estartup-bootstrap-landing-page-template/
-    Author: BootstrapMade.com
-    License: https://bootstrapmade.com/license/
-  ======================================================= -->
-</head>
-
-<body>
-
-  <header id="header" class="header header-hide">
-    <div class="container">
-
-      <div id="logo" class="pull-left">
-        <h1><a href="/" class="scrollto">ASAP</a></h1>
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
-      </div>
-
-      <nav id="nav-menu-container">
-        <ul class="nav-menu">
-        <li><a class="navbar-brand" href="/">Home</a></li>
-        <li><a class="navbar-brand" href="/intro">소개</a></li>
-          <li class="menu-has-children"><a>실험</a>
-            <ul>
-         
-             <li><a class="nav-link" href="/research/all"> 실험목록</a></li>
-
-             {% if user.is_student %}
-             <li class="nav-item active">
-               <a class="nav-link" href="/research/enroll"> 실험신청</a>
-             </li>
-             <li class="nav-item active">
-               <a class="nav-link" href="/student/myresearch"> 참여 중인 실험</a>
-             </li>
-             {% elif user.is_prof %}
-             <li class="nav-item active">
-               <a class="nav-link" href="/research/create"> 실험등록</a>
-             </li>
-             <li class="nav-item active">
-               <a class="nav-link" href="/prof/myresearch"> 내 실험 관리</a>
-             </li>
-            {% endif %}
-            </ul>
-          </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/mypage"> 내 정보</a>
-        </li>
-        <li class="nav-item active">
-         {% if user.is_active %}
-          <a class="nav-link" href="{% url 'logout' %}">SIGN OUT</a>
-         {% else %}
-         <a class="nav-link" href="{% url 'login' %}">SIGN IN</a>
-         {% endif %}
-       </li>
-
-        </ul>
-      </nav><!-- #nav-menu-container -->
-    </div>
-  </header><!-- #header -->
-
+{% block content %}
   <!--==========================
     Welcome Section
   ============================-->
@@ -411,22 +324,4 @@
 
 
   <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-
-  <!-- JavaScript Libraries -->
-  <script src= '{% static "lib/jquery/jquery.min.js" %}'></script>
-  <script src='{% static "lib/jquery/jquery-migrate.min.js" %}'></script>
-  <script src='{% static "lib/bootstrap/js/bootstrap.bundle.min.js" %}'></script>
-  <script src='{% static "lib/superfish/hoverIntent.js" %}'></script>
-  <script src='{% static "lib/superfish/superfish.min.js" %}'></script>
-  <script src='{% static "lib/easing/easing.min.js" %}'></script>
-  <script src='{% static "lib/modal-video/js/modal-video.js" %}'></script>
-  <script src='{% static "lib/owlcarousel/owl.carousel.min.js" %}'></script>
-  <script src='{% static "lib/wow/wow.min.js" %}'></script>
-  <!-- Contact Form JavaScript File -->
-  <script src='{% static "contactform/contactform.js" %}'></script>
-
-  <!-- Template Main Javascript File -->
-  <script src='{% static "js/main.js" %}'></script>
-
-</body>
-</html>
+{% endblock %}

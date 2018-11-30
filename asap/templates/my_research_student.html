@@ -5,7 +5,7 @@
   <p></p>
     <br/>
     <br/>
-    <h3>내 실험</h3>
+    <h3>실험 참여 내역</h3>
     <table class="table">
       <thead>
         <tr>
@@ -14,6 +14,10 @@
           <th scope="col">실험명</th>
           <th scope="col">학기</th>
           <th scope="col">교강사</th>
+          <th scope="col">장소</th>
+          <th scope="col">시간</th>
+          <th scope="col">시수</th>
+
           <th scope="col">평점</th>
         </tr>
       </thead>
@@ -21,10 +25,13 @@
         {% for my_research in my_researches %}
         <tr>
           <th scope="row">{{forloop.counter}}</th>
-          <td>{{ my_research.title.research_number }}</td>
-          <td>{{ my_research.title.title }}</td>
-          <td>{{ my_research.title.get_semester_display }}</td>
-          <td>{{ my_research.title.prof }}</td>
+          <td>{{ my_research.unit_obj.research_obj.research_number }}</td>
+          <td><a href="", onclick="window.open('{% url 'research_info' my_research.unit_obj.research_obj.pk %}','info','width=800, height=800');">{{ my_research.unit_obj.research_obj.research_name }}</a></td>
+          <td>{{ my_research.unit_obj.research_obj.get_semester_display }}</td>
+          <td>{{ my_research.unit_obj.research_obj.prof_obj }}</td>
+          <td>{{ my_research.unit_obj.place }}</td>
+          <td>{{ my_research.unit_obj.date }}</td>
+          <td>{{ my_research.unit_obj.period }}</td>
           <td>{{ my_research.score }}</td>
         </tr>
         {% endfor %}

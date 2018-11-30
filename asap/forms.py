@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import modelformset_factory
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Student, Prof, Research, Record
+from .models import User, Student, Prof, Research, Record, Unit
 
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
@@ -9,6 +9,8 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMessage
+
+from bootstrap_datepicker_plus import DateTimePickerInput
 
 class StudentSignUpForm(UserCreationForm):
 
@@ -72,7 +74,24 @@ class ProfSignUpForm(UserCreationForm):
 class CreateResearchForm(forms.ModelForm):
     class Meta():
         model = Research
-        fields = ('research_number', 'title', 'year', 'semester', 'max_number', 'start_time', 'place', 'start_time', 'hour', 'minute', 'description',)
+        fields = ('research_number', 'research_name', 'year', 'semester', 'description',)
+
+
+class CreateUnitForm(forms.ModelForm):
+    class Meta():
+        model = Unit
+        fields = ('place', 'date', 'period', 'max_number', 'remark',)
+        widgets = {
+            'date': DateTimePickerInput(
+                options={
+                    "locale": "ko",
+                }
+            ),
+        }
+
+
+# UnitFormset = modelformset_factory(CreateUnitForm, fields=('place', 'date', 'period', 'max_number', 'remark', ), extra=1)
+
 
 RecordScoreFormSet = modelformset_factory(Record, fields=('score', ), extra=0)
 
